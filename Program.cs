@@ -9,11 +9,15 @@ using System.Collections.Specialized;
 using Autodesk.ProcessPower.ProjectManager;
 using Autodesk.ProcessPower.PlantInstance;
 using Autodesk.AutoCAD.Runtime;
+using System.Reflection;
 
 #endregion
 
 //V0
 //v1:added DisplayElevation
+//v2:string format DisplayElevation
+//v3: no change, accidentally sent out
+//v4: no change yet, not sent out yet
 
 namespace pssCommands
 {
@@ -36,7 +40,7 @@ namespace pssCommands
                 }
 
                 if (Autodesk.ProcessPower.AcPp3dObjectsUtils.ProjectUnits.CurrentLinearUnit == 1) //1=mm,2=in
-                    precision = 0;
+                    precision = 2;
                 else
                     precision = 4;
 
@@ -45,8 +49,9 @@ namespace pssCommands
                 Helper.ed.WriteMessage("\n MERCHANTABILITY OR FITNESS FOR A PARTICULAR USE.  AUTODESK, INC.");
                 Helper.ed.WriteMessage("\n DOES NOT WARRANT THAT THE OPERATION OF THE PROGRAM WILL BE");
                 Helper.ed.WriteMessage("\n UNINTERRUPTED OR ERROR FREE.");
+                Helper.ed.WriteMessage("\n\n Version (static string): 21.17.0.4");
 
-                
+
                 using (Transaction tr = Helper.db.TransactionManager.StartTransaction())
                 {
 
@@ -85,9 +90,9 @@ namespace pssCommands
 
                             displaylength = Converter.DistanceToString(Convert.ToDouble(length), DistanceUnitFormat.Current, precision);
                             if (Autodesk.ProcessPower.AcPp3dObjectsUtils.ProjectUnits.CurrentLinearUnit == 1)
-                                displayelevation = Math.Round(Convert.ToDouble(positionz), precision).ToString();
+                                displayelevation = Math.Round(Convert.ToDouble(positionz), precision).ToString("F");
                             else
-                                displayelevation = Math.Round(Convert.ToDouble(positionz) / 12, 2).ToString() + "'";
+                                displayelevation = Math.Round(Convert.ToDouble(positionz) / 12, precision).ToString("F") + "'";
 
                             try
                             {
